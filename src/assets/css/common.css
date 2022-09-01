@@ -1,0 +1,128 @@
+/* 清除内外边距 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 去除列表项前的小点 */
+li {
+  list-style: none;
+}
+
+/* 去除超链接的下划线 */
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* 清除浮动 */
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.clearfix {
+  /* 兼容IE6、7 */
+  *zoom: 1;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+
+.pointer {
+  cursor: pointer;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+
+i, em {
+  font-style: normal;
+}
+
+.text-justify {
+  text-align: justify;
+  text-align-last: justify;
+}
+
+.horizontal-center {
+  text-align: center;
+}
+
+.text-inline-show {
+  /* 单行文本显示省略号 */
+  /* 1. 先强制一行内显示文本 */
+  white-space: nowrap;
+  /* 2. 查出部分隐藏 */
+  overflow: hidden;
+  /* 3.文字用省略号替代超出部分 */
+  text-overflow: ellipsis;
+}
+
+.select-disabled {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.red, .loved, .hover-red:hover {
+  color: #ec4141;
+}
+
+.light-gray {
+  color: #c6c2c2;
+}
+
+.not-visible {
+  visibility: hidden;
+}
+
+.hover-black:hover {
+  color: black;
+}
+
+.playing-row {
+  color: #ec4141;
+  background-color: #edeff1 !important;
+}
+
+.gray {
+  color: #9f9f9f;
+}
+
+.black {
+  color: black;
+}
+
+.right {
+  float: right;
+}
+
+/************** 设置滚动条样式 **************/
+::-webkit-scrollbar {
+  width: 6px;
+  height: 1px;
+}
+
+/*滑块部分*/
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #cecece;
+}
+
+/*轨道部分*/
+::-webkit-scrollbar-track {
+  /*box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);*/
+  /*background: #ffffff;*/
+  /*border-radius: 5px;*/
+}

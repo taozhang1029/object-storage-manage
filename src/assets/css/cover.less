@@ -1,0 +1,102 @@
+.cover__box {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.cover__pic {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transform: scale(1) translateZ(0);
+  -webkit-transition: -webkit-transform .75s
+}
+
+.cover__mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  transition: opacity .5s
+}
+
+.cover__icon_play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -40px;
+  width: 80px;
+  height: 80px;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  -webkit-transform: scale(.7) translateZ(0);
+  -webkit-transition-property: opacity, -webkit-transform;
+  -webkit-transition-duration: .5s;
+  transform: scale(.7) translateZ(0);
+  transition-property: opacity, transform;
+  transition-duration: .5s;
+  zoom: 1;
+  background-size: 68%;
+  background-repeat: no-repeat;
+  background-position: 50%
+}
+
+.cover__box:hover .cover__pic {
+  -webkit-transform: scale(1.07) translateZ(0);
+  -webkit-transition: -webkit-transform .75s cubic-bezier(0, 1, .75, 1)
+}
+
+.cover__box:hover .cover__mask {
+  opacity: .2;
+  filter: alpha(opacity=20);
+  transition: opacity .5s
+}
+
+.cover__box:hover .cover__icon_play {
+  background: none \9;
+  filter: progid:dximagetransform.microsoft.alphaimageloader(src="http://y.qq.com/mediastyle/yqq/img/cover_play.png?max_age=2592000",sizingmethod="crop") alpha(opacity=90);
+  opacity: .9;
+  -webkit-transform: scale(1) translateZ(0);
+  -webkit-transition-property: opacity, -webkit-transform;
+  -webkit-transition-duration: .5s;
+  transform: scale(1) translateZ(0);
+  transition-property: opacity, transform;
+  transition-duration: .5s;
+  cursor: pointer
+}
+
+.cover__box:hover .cover__icon_play {
+  opacity: 1;
+  filter: none;
+  background-image: url(https://y.qq.com/ryqq/static/media/cover_play.56974e6f.png?max_age=2592000);
+  background-image: -webkit-image-set(url(https://y.qq.com/ryqq/static/media/cover_play.56974e6f.png?max_age=2592000) 1x, url(https://y.qq.com/ryqq/static/media/cover_play@2x.53a26efb.png?max_age=2592000) 2x)
+}
+
+@supports ((-o-object-fit: cover) or (object-fit:cover)) {
+  .cover__pic {
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover
+  }
+}
+
+@supports (transform: scale(1)) {
+  .cover__pic {
+    transform: scale(1) translateZ(0);
+    transition: transform .75s
+  }
+
+  .cover__box:hover .cover__pic {
+    transform: scale(1.07) translateZ(0);
+    transition: transform .75s cubic-bezier(0, 1, .75, 1)
+  }
+}
