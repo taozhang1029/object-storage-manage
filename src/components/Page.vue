@@ -4,8 +4,9 @@
       :total="total"
       :page-size="pageSize"
       :hide-on-single-page="hideOnSinglePage"
+      @size-change="$emit('pageSizeChangeHandler',$event)"
       @current-change="$emit('pageNumChangeHandler',$event)"
-      layout="total, prev, pager, next"
+      layout="sizes, prev, pager, next,total"
       style="text-align: right; margin-top: 15px">
   </el-pagination>
 </template>

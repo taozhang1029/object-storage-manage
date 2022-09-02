@@ -7,14 +7,14 @@
       </el-header>
       <el-container style="height: 90%">
         <el-aside width="210px">
-          <div class="route-item">
+          <div class="route-item select-disabled" @click="$router.push({name: 'home'})">
             <i class="el-icon-s-cooperation"></i>
-            文件桶
+            首页
           </div>
         </el-aside>
         <el-container>
           <el-main>
-            <router-view/>
+            <router-view :key="$route.fullPath + '_' + new Date().getTime()"/>
           </el-main>
           <el-footer height="35px">
             <a href="https://github.com/taozhang1029" target="_blank">
@@ -62,16 +62,19 @@
 .el-aside {
   background-color: #0e0e0e;
   color: #edeff1;
+
   .route-item {
     padding-left: 20px;
-    height: 60px;
+    height: 50px;
     width: 100%;
-    line-height: 60px;
+    line-height: 50px;
     cursor: pointer;
     font-size: 18px;
+
     i {
       margin-right: 10px;
     }
+
     &:hover {
       background-color: #666363;
     }

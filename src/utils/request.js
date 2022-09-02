@@ -92,7 +92,7 @@ request.interceptors.response.use(
     const headers = response.headers;
     // 判断请求头中数据是不是json格式数据
     let reg = RegExp(/application\/json/);
-    if (headers["content-type"].match(reg)) {
+    if (headers["content-type"] && headers["content-type"].match(reg)) {
       return response.data
     } else {
       // 获取响应中返回的字符串

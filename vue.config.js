@@ -14,10 +14,21 @@ module.exports = {
       '/api': {
         withCredentials: true,
         target: 'http://storage.kingsley.com/',
+        // target: 'http://127.0.0.1:9527/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''  // 重写路径
+        }
+      },
+      '/download': {
+        withCredentials: true,
+        target: 'http://storage.kingsley.com/download',
+        // target: 'http://127.0.0.1:9527/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/download': ''  // 重写路径
         }
       }
     }
