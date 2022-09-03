@@ -1,5 +1,16 @@
 <template>
   <div class="objects">
+    <el-dialog :visible.sync="visible">
+      <span slot="title">
+        <i class="el-icon-warning red">&nbsp;&nbsp;️警告</i>
+      </span>
+      <div class="horizontal-center">确定要删除 {{ (currObj && currObj.key) }} - {{ (currObj && currObj.originName) }} 吗?
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="visible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteFile">确 定</el-button>
+      </span>
+    </el-dialog>
     <el-form ref="form" :model="form" label-width="70px" inline size="mini">
       <el-form-item>
         <h2>{{ bucketName }}</h2>
@@ -11,17 +22,6 @@
 
       <el-form-item label="文件名">
         <el-input v-model="form.name" clearable></el-input>
-      </el-form-item>
-
-      <el-form-item label="上传时间">
-        <el-date-picker
-            type="daterange"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            v-model="form.dates">
-        </el-date-picker>
       </el-form-item>
 
       <el-form-item>
@@ -45,7 +45,7 @@
       <!-- 文件名 -->
       <el-table-column label="文件名">
         <template slot-scope="{row}">
-          <div class="text-inline-show">{{row.originName}}</div>
+          <div class="text-inline-show">{{ row.originName }}</div>
         </template>
       </el-table-column>
 
@@ -63,7 +63,7 @@
         <template slot-scope="{row}">
           <el-button size="mini" icon="el-icon-view" title="查看" @click="viewObject(row)"></el-button>
           <el-button size="mini" icon="el-icon-download" title="下载" @click="downloadFile(row)"></el-button>
-          <el-button size="mini" icon="el-icon-delete" title="删除"></el-button>
+          <el-button size="mini" icon="el-icon-delete" title="删除" @click="currObj=row;visible=true"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,7 +78,7 @@
 
 <script>
 import Page from "@/components/Page";
-import {download, queryObjects} from "@/api";
+import {deleteObject, download, queryObjects} from "@/api";
 
 export default {
   name: "ObjectListView",
@@ -86,6 +86,8 @@ export default {
   props: ['bucketName'],
   data() {
     return {
+      currObj: null,
+      visible: false,
       objects: [],
       total: 0,
       pageNum: 1,
@@ -108,7 +110,21 @@ export default {
     downloadFile(object) {
       download(this.bucketName, object.key)
     },
-    viewObject(object){
+    deleteFile() {
+      if (!this.currObj) {
+        return
+      }
+      deleteObject(this.bucketName, this.currObj.key).then(resp => {
+        if (resp) {
+          this.$message.success('删除成功')
+          this.visible = false
+          this.search(this.pageNum)
+        } else {
+          this.$message.error('删除失败')
+        }
+      })
+    },
+    viewObject(object) {
 
     },
     search(pageNum) {

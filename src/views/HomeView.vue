@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <el-dialog :visible.sync="visible" title="创建文件桶">
+    </el-dialog>
+
     <el-form ref="form" :model="form" label-width="80px" inline size="mini">
       <el-form-item label="文件桶">
         <el-input v-model="form.name" clearable></el-input>
@@ -19,7 +22,7 @@
       <el-form-item>
         <el-button type="primary" @click="search(1)">搜索</el-button>
         <el-button @click="reset">重置</el-button>
-        <el-button type="success" @click="create">新建</el-button>
+        <el-button type="success" @click="visible=true">新建</el-button>
       </el-form-item>
     </el-form>
 
@@ -71,6 +74,7 @@ export default {
   components: {Page},
   data() {
     return {
+      visible: false,
       buckets: [],
       total: 0,
       pageNum: 1,
@@ -88,9 +92,6 @@ export default {
     reset() {
       this.form.name = ''
       this.form.dates = []
-    },
-    create() {
-
     },
     search(pageNum) {
       this.pageNum = pageNum
