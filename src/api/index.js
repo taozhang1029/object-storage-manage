@@ -9,13 +9,13 @@ import {http} from "@/utils/http";
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function queryBuckets(bucketName, dateRange, pageNum, pageSize) {
-    return http.get('/', {
-        bucketName,
-        startTime: (dateRange && dateRange.length > 0) ? dateRange[0] : null,
-        endTime: (dateRange && dateRange.length > 1) ? dateRange[1] : null,
-        pageNum,
-        pageSize
-    })
+  return http.get('/', {
+    bucketName,
+    startTime: (dateRange && dateRange.length > 0) ? dateRange[0] : null,
+    endTime: (dateRange && dateRange.length > 1) ? dateRange[1] : null,
+    pageNum,
+    pageSize
+  })
 }
 
 /**
@@ -27,12 +27,13 @@ export function queryBuckets(bucketName, dateRange, pageNum, pageSize) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function queryObjects(bucketName, dateRange, pageNum, pageSize) {
-    return http.get('/' + bucketName, {
-        startTime: (dateRange && dateRange.length > 0) ? dateRange[0] : null,
-        endTime: (dateRange && dateRange.length > 1) ? dateRange[1] : null,
-        pageNum,
-        pageSize
-    })
+  return http.get('/objects', {
+    bucketName,
+    startTime: (dateRange && dateRange.length > 0) ? dateRange[0] : null,
+    endTime: (dateRange && dateRange.length > 1) ? dateRange[1] : null,
+    pageNum,
+    pageSize
+  })
 }
 
 /**
@@ -42,7 +43,7 @@ export function queryObjects(bucketName, dateRange, pageNum, pageSize) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function getDownloadLink(bucketName, key) {
-    return http.get('/url/' + bucketName + '/' + key)
+  return http.get('/url/' + bucketName + '/' + key)
 }
 
 /**
@@ -52,9 +53,20 @@ export function getDownloadLink(bucketName, key) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function download(bucketName, key) {
-    getDownloadLink(bucketName, key).then(resp => {
-        http.get(resp['url'].replace('http://storage.kingsley.com', ''))
-    })
+  getDownloadLink(bucketName, key).then(resp => {
+    http.get(resp['url'].replace('http://storage.kingsley.com', ''))
+  })
+}
+
+/**
+ * 桶是否已存在
+ * @param bucketName
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export function existsBucket(bucketName) {
+  return http.get('/exists', {
+    bucketName
+  })
 }
 
 /**
@@ -64,7 +76,7 @@ export function download(bucketName, key) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function createBucket(bucketName, location) {
-    return http.put('/' + bucketName + "?location=" + location)
+  return http.put('/' + bucketName + "?location=" + location)
 }
 
 /**
@@ -73,7 +85,10 @@ export function createBucket(bucketName, location) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function deleteBucket(bucketName) {
-    return http.delete('/' + bucketName)
+  return http.delete('/', {
+    bucketName,
+    isDeleteObj: false
+  })
 }
 
 /**
@@ -83,7 +98,11 @@ export function deleteBucket(bucketName) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function deleteObject(bucketName, key) {
-    return http.delete('/' + bucketName + '/' + key)
+  return http.delete('/', {
+    bucketName,
+    key,
+    isDeleteObj: true
+  })
 }
 
 /**
@@ -94,7 +113,7 @@ export function deleteObject(bucketName, key) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function uploadFile(bucketName, key, originName) {
-    return http.put('/' + bucketName + '/' + key + "?originName=" + originName)
+  return http.put('/' + bucketName + '/' + key + "?originName=" + originName)
 }
 
 /**
@@ -106,7 +125,7 @@ export function uploadFile(bucketName, key, originName) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function pullOuterFile(bucketName, key, originName, outerUrl) {
-    return http.put('/' + bucketName + '/' + key + "?originName=" + originName, {
-        outerUrl
-    })
+  return http.put('/' + bucketName + '/' + key + "?originName=" + originName, {
+    outerUrl
+  })
 }

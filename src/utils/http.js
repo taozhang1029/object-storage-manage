@@ -9,9 +9,13 @@ export const http = {
       }
     })
   },
-  post(url, params) {
+  post(url, params, headers) {
     return request.post(url, {
       ...params
+    }, {
+      headers: {
+        ...headers
+      }
     })
   },
   delete(url, params) {

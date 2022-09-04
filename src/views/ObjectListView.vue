@@ -2,7 +2,7 @@
   <div class="objects">
     <el-dialog :visible.sync="visible">
       <span slot="title">
-        <i class="el-icon-warning red">&nbsp;&nbsp;️警告</i>
+        <i class="el-icon-warning red">&nbsp;&nbsp;警告</i>
       </span>
       <div class="horizontal-center">确定要删除 {{ (currObj && currObj.key) }} - {{ (currObj && currObj.originName) }} 吗?
       </div>
@@ -11,6 +11,7 @@
         <el-button type="primary" @click="deleteFile">确 定</el-button>
       </span>
     </el-dialog>
+
     <el-form ref="form" :model="form" label-width="70px" inline size="mini">
       <el-form-item>
         <h2>{{ bucketName }}</h2>
