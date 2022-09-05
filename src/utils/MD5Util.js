@@ -14,7 +14,7 @@
 let hexcase = 0;  /* hex output format. 0 - lowercase; 1 - uppercase        */
 let b64pad = ""; /* base-64 pad character. "=" for strict RFC compliance   */
 let chrsz = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode      */
-let lmd5 = {}
+let MD5 = {}
 
 /*
  * Calculate the MD5 of an array of little-endian words, and a bit length
@@ -227,23 +227,23 @@ function binl2b64(binarray) {
  * These are the functions you'll usually want to call
  * They take string arguments and return either hex or base-64 encoded strings
  */
-lmd5.hex_md5 = function (s) {
+MD5.hex_md5 = function (s) {
   return binl2hex(core_md5(str2binl(s), s.length * chrsz));
 }
-lmd5.b64_md5 = function (s) {
+MD5.b64_md5 = function (s) {
   return binl2b64(core_md5(str2binl(s), s.length * chrsz));
 }
-lmd5.str_md5 = function (s) {
+MD5.str_md5 = function (s) {
   return binl2str(core_md5(str2binl(s), s.length * chrsz));
 }
-lmd5.hex_hmac_md5 = function (key, data) {
+MD5.hex_hmac_md5 = function (key, data) {
   return binl2hex(core_hmac_md5(key, data));
 }
-lmd5.b64_hmac_md5 = function (key, data) {
+MD5.b64_hmac_md5 = function (key, data) {
   return binl2b64(core_hmac_md5(key, data));
 }
-lmd5.str_hmac_md5 = function (key, data) {
+MD5.str_hmac_md5 = function (key, data) {
   return binl2str(core_hmac_md5(key, data));
 }
 
-export default lmd5
+export default MD5

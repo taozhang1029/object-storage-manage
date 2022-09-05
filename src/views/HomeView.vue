@@ -100,7 +100,7 @@
 import {createBucket, deleteBucket, existsBucket, queryBuckets} from "@/api";
 import Page from "@/components/Page";
 import {uploadFile} from "@/utils/upload";
-import lmd5 from "@/utils/signature";
+import MD5 from "@/utils/MD5Util";
 
 export default {
   name: 'HomeView',
@@ -222,15 +222,16 @@ export default {
         uploadFile(this.file, {
           bucketName: this.targetBucket.bucketName,
           originName: this.file.name,
-          key: lmd5.hex_md5(this.targetBucket.bucketName + this.file.name + new Date().getTime()).substring(0, 8),
+          key: MD5.hex_md5(this.targetBucket.bucketName + this.file.name + new Date().getTime()).substring(0, 8),
         }).then(resp => {
           console.log(resp)
-          if (resp.data) {
-            this.$message.success("上传成功")
-            this.search(this.pageNum)
-          } else {
-            this.$message.error("上传失败")
-          }
+          this.search(this.pageNum)
+          // if (resp.data) {
+          //   this.$message.success("上传成功")
+          //   this.search(this.pageNum)
+          // } else {
+          //   this.$message.error("上传失败")
+          // }
         })
       } else {
         this.$message.warning("请先选择要上传的文件");
