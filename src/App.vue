@@ -13,10 +13,10 @@
           </div>
         </el-aside>
         <el-container>
-          <el-main>
+          <el-main :style="{padding: ($route.name === 'object') ? 0 : '20px'}">
             <router-view :key="$route.fullPath + '_' + new Date().getTime()"/>
           </el-main>
-          <el-footer height="35px">
+          <el-footer height="35px" v-show="$route.name !== 'object'">
             <a href="https://github.com/taozhang1029" target="_blank">
               <i class="iconfont icon-github"></i>
               版权所有 © Kingsley

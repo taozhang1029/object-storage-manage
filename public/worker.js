@@ -15,7 +15,7 @@ function FormAjax_Sync(data, url, success) {
  * 响应主线程发过来的数据进行处理
  * @param evt
  */
-onmessage = function (evt) {
+self.onmessage = (evt) => {
   let params = evt.data;
   console.log(params)
   // 传递的参数

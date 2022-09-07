@@ -28,6 +28,7 @@
       <el-form-item>
         <el-button type="primary" @click="search(1)">搜索</el-button>
         <el-button @click="reset">重置</el-button>
+        <el-button @click="$router.push({name: 'home'})">返回</el-button>
       </el-form-item>
     </el-form>
 
@@ -79,7 +80,7 @@
 
 <script>
 import Page from "@/components/Page";
-import {deleteObject, download, queryObjects} from "@/api";
+import {deleteObject, download, getDownloadLink, queryObjects} from "@/api";
 
 export default {
   name: "ObjectListView",
@@ -126,7 +127,28 @@ export default {
       })
     },
     viewObject(object) {
-
+      console.log(object)
+      this.$router.push({
+        name: 'object',
+        params: {
+          bucketName: object.bucket,
+          objectKey: object.key,
+        }
+      })
+      // getDownloadLink(object.bucket, object.key).then(resp => {
+      //   if (resp) {
+      //     this.$router.push({
+      //       name: 'object',
+      //       query: {
+      //         resource: resp['url']
+      //       },
+      //       params: {
+      //         bucketName: object.bucket,
+      //         objectKey: object.key,
+      //       }
+      //     })
+      //   }
+      // })
     },
     search(pageNum) {
       this.pageNum = pageNum

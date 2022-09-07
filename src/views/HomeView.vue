@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="requestCreateBucket('createForm')">立即创建</el-button>
-          <el-button @click="resetCreateForm('createForm')">重置</el-button>
+          <el-button @click="createVisible=false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -72,12 +72,13 @@
           <div class="operations">
             <el-button size="mini" icon="el-icon-view" title="查看" @click="viewBucket(row)"></el-button>
             <el-upload
+                :ref="'uploader'+row.bucketName"
                 with-credentials
+                multiple
                 class="avatar-uploader"
-                :limit="1"
                 action="#"
                 :auto-upload="true"
-                :show-file-list="false"
+                :show-file-list="true"
                 :http-request="requestUploadFile"
                 :before-upload="beforeUpload">
               <el-button slot="trigger" size="mini" icon="el-icon-upload" title="上传文件" @click="targetBucket = row"></el-button>
@@ -130,7 +131,7 @@ export default {
     };
     return {
       targetBucket: null,
-      file: null,
+      files: null,
       currBucket: null,
       createVisible: false,
       deleteVisible: false,
@@ -180,7 +181,7 @@ export default {
     },
     pageSizeChange(pageSize) {
       this.pageSize = pageSize
-      this.search(this.pageNum)
+      this.search(1)
     },
     requestDeleteBucket() {
       if (!this.currBucket) {
@@ -203,7 +204,6 @@ export default {
             if (success) {
               this.$message.success("创建成功")
               this.createVisible = false
-              this.resetCreateForm()
               this.search(1)
             } else {
               this.$message.error("创建失败")
@@ -214,32 +214,28 @@ export default {
         }
       });
     },
-    beforeUpload(file) {
-      this.file = file
+    beforeUpload(files) {
+      this.files = files
     },
     requestUploadFile(e) {
-      if (this.file != null) {
-        uploadFile(this.file, {
+      if (this.files != null) {
+        uploadFile(this.files, {
           bucketName: this.targetBucket.bucketName,
-          originName: this.file.name,
-          key: MD5.hex_md5(this.targetBucket.bucketName + this.file.name + new Date().getTime()).substring(0, 8),
+          originName: this.files.name,
+          key: MD5.hex_md5(this.targetBucket.bucketName + this.files.name + new Date().getTime()).substring(0, 8),
         }).then(resp => {
-          console.log(resp)
-          this.search(this.pageNum)
-          // if (resp.data) {
-          //   this.$message.success("上传成功")
-          //   this.search(this.pageNum)
-          // } else {
-          //   this.$message.error("上传失败")
-          // }
+          if (resp) {
+            this.$message.success("上传成功")
+            this.search(this.pageNum)
+          } else {
+            this.$message.error("上传失败")
+          }
+          this.$refs['uploader' + this.targetBucket.bucketName].clearFiles()
+          this.files = null
         })
       } else {
         this.$message.warning("请先选择要上传的文件");
       }
-    },
-    resetCreateForm() {
-      this.createForm.name = ''
-      this.createForm.location = ''
     },
     viewBucket(bucket) {
       this.$router.push({

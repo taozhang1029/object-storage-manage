@@ -1,6 +1,6 @@
 import axios from "axios";
 import MD5 from "@/utils/MD5Util";
-import {Loading} from "element-ui";
+import {Loading, Message} from "element-ui";
 
 /**
  * 每个分片的大小
@@ -13,7 +13,7 @@ const upload = (url, data, headers) => {
   return new Promise((resolve, reject) => {
     axios({
       url,
-      method: "put",
+      method: "post",
       data,
       headers: {
         ...headers,
@@ -45,7 +45,7 @@ async function uploadFile(file, {originName, bucketName, key}) {
       return res;
     } else {
       // 如果文件大于等于5MB，分片上传
-      await uploadByPieces('/api/uploadMultiChunk', {file, originName, bucketName, key});
+      await uploadByPieces('/api/uploadMultiChunk', {file: file, originName, bucketName, key});
       loadingInstance.close();
     }
   } catch (e) {

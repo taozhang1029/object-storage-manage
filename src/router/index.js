@@ -27,6 +27,12 @@ const routes = [
     component: () => import('@/views/ObjectListView'),
     props: true
   },
+  {
+    path: '/object/:bucketName/:objectKey',
+    name: 'object',
+    component: () => import('@/views/PreView'),
+    props: true
+  },
 ]
 
 const router = new VueRouter({
