@@ -1,6 +1,7 @@
 import axios from "axios";
 import MD5 from "@/utils/MD5Util";
-import {Loading, Message} from "element-ui";
+import {Loading} from "element-ui";
+import Vue from "vue";
 
 /**
  * 每个分片的大小
@@ -42,12 +43,11 @@ async function uploadFile(file, {originName, bucketName, key}) {
       formData.append("key", key);
       const res = await upload('/api/uploadSingleChunk', formData);
       loadingInstance.close();
-      return res;
+      Vue.prototype.$bus.$emit('uploadFinish', res)
     } else {
       // 如果文件大于等于5MB，分片上传
       await uploadByPieces('/api/uploadMultiChunk', {file: file, originName, bucketName, key});
       loadingInstance.close();
-      return Promise.resolve(true)
     }
   } catch (e) {
     loadingInstance.close();
@@ -75,7 +75,8 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
     pageData,
     file
   }
-  worker.onmessage = function (event) {
+
+  worker.onmessage = event => {
     let workResult = event.data;
     if (workResult.code === 0) {
       pageData.percent = workResult.percent;
@@ -83,9 +84,13 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
         pageData.showProgress = false;
         worker.terminate();
       }
+      if (workResult.chunkCount === workResult.index + 1) {
+        Vue.prototype.$bus.$emit('uploadFinish', true)
+      }
     } else {
       pageData.showProgress = false;
       worker.terminate();
+      Vue.prototype.$bus.$emit('uploadFinish', false)
     }
   }
   worker.postMessage(param);

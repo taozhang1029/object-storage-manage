@@ -17,7 +17,6 @@ function FormAjax_Sync(data, url, success) {
  */
 self.onmessage = (evt) => {
   let params = evt.data;
-  console.log(params)
   // 传递的参数
   const file = params.file
   const fileSize = params.fileSize
@@ -44,7 +43,7 @@ self.onmessage = (evt) => {
     formData.append("chunkIndex", index + '');
     formData.append("chunkSize", (end - start) + '');
     //上传文件
-    FormAjax_Sync(formData, params.uploadUrl, function (result, status) {
+    FormAjax_Sync(formData, params.uploadUrl, (result, status) => {
       let code = 0;
       let percent = 0;
       if (status === 200) {
@@ -55,7 +54,7 @@ self.onmessage = (evt) => {
         code = -1
         // console.log("分片第" + index + "个上传失败")
       }
-      self.postMessage({code: code, percent: percent});
+      self.postMessage({code: code, percent: percent, index: index, chunkCount: chunkCount});
     })
     start = end;
     index++;

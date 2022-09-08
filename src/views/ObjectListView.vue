@@ -12,23 +12,29 @@
       </span>
     </el-dialog>
 
-    <el-form ref="form" :model="form" label-width="70px" inline size="mini">
+    <el-form ref="form" :model="form" label-width="60px" inline size="mini">
       <el-form-item>
         <h2>{{ bucketName }}</h2>
       </el-form-item>
 
-      <el-form-item label="key">
-        <el-input v-model="form.key" clearable></el-input>
+      <el-form-item label="key:">
+        <el-input v-model="form.key" clearable @keyup.enter="search(1)"></el-input>
       </el-form-item>
 
-      <el-form-item label="文件名">
-        <el-input v-model="form.name" clearable></el-input>
+      <el-form-item label="文件名:">
+        <el-input v-model="form.name" clearable @keyup.enter="search(1)"></el-input>
       </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="search(1)">搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="$router.push({name: 'home'})">返回</el-button>
+      </el-form-item>
+
+      <el-form-item class="right">
+        <Uploader :bucket-name="bucketName" @successUploadFinish="search(1)">
+          <el-button type="success">上传</el-button>
+        </Uploader>
       </el-form-item>
     </el-form>
 
@@ -47,7 +53,7 @@
       <!-- 文件名 -->
       <el-table-column label="文件名">
         <template slot-scope="{row}">
-          <div class="text-inline-show">{{ row.originName }}</div>
+          <div class="text-inline-show" :title="row.originName">{{ row.originName }}</div>
         </template>
       </el-table-column>
 
@@ -80,12 +86,13 @@
 
 <script>
 import Page from "@/components/Page";
-import {deleteObject, download, getDownloadLink, queryObjects} from "@/api";
+import {deleteObject, download, queryObjects} from "@/api";
+import Uploader from "@/components/Uploader";
 
 export default {
   name: "ObjectListView",
-  components: {Page},
-  props: ['bucketName'],
+  components: {Uploader, Page},
+  props: ['bucketName',],
   data() {
     return {
       currObj: null,
@@ -152,7 +159,7 @@ export default {
     },
     search(pageNum) {
       this.pageNum = pageNum
-      queryObjects(this.bucketName, this.form.dates, pageNum, this.pageSize).then(page => {
+      queryObjects(this.bucketName, this.form.key, this.form.name, this.form.dates, pageNum, this.pageSize).then(page => {
         this.objects = page.content
         this.total = page.total
       })

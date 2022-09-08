@@ -164,6 +164,21 @@ export default {
   created() {
     this.search(1)
   },
+  mounted() {
+    this.$bus.$on(['uploadFinish'], success => {
+      if (success) {
+        this.$message.success('上传成功')
+        this.search(this.pageNum)
+      } else {
+        this.$message.error('上传失败')
+      }
+      this.$refs['uploader' + this.targetBucket.bucketName].clearFiles()
+      this.files = null
+    })
+  },
+  beforeDestroy() {
+    this.$bus.$off(['uploadFinish'])
+  },
   methods: {
     reset() {
       this.filterForm.name = ''
@@ -222,17 +237,7 @@ export default {
         uploadFile(this.files, {
           bucketName: this.targetBucket.bucketName,
           originName: this.files.name,
-          key: MD5.hex_md5(this.targetBucket.bucketName + this.files.name + new Date().getTime()).substring(0, 8),
-        }).then(resp => {
-          console.log(resp)
-          if (resp) {
-            this.$message.success("上传成功")
-            this.search(this.pageNum)
-          } else {
-            this.$message.error("上传失败")
-          }
-          this.$refs['uploader' + this.targetBucket.bucketName].clearFiles()
-          this.files = null
+          key: MD5.hex_md5(this.targetBucket.bucketName + this.files.name + new Date().getTime()).substring(0, 8)
         })
       } else {
         this.$message.warning("请先选择要上传的文件");

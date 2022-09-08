@@ -21,14 +21,18 @@ export function queryBuckets(bucketName, dateRange, pageNum, pageSize) {
 /**
  * 查询文件列表
  * @param bucketName
+ * @param objectKey
+ * @param originName
  * @param dateRange
  * @param pageNum
  * @param pageSize
  * @returns {Promise<AxiosResponse<any>>}
  */
-export function queryObjects(bucketName, dateRange, pageNum, pageSize) {
+export function queryObjects(bucketName, objectKey, originName, dateRange, pageNum, pageSize) {
   return http.get('/objects', {
     bucketName,
+    objectKey,
+    originName,
     startTime: (dateRange && dateRange.length > 0) ? dateRange[0] : null,
     endTime: (dateRange && dateRange.length > 1) ? dateRange[1] : null,
     pageNum,
