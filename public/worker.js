@@ -47,19 +47,19 @@ self.onmessage = (evt) => {
     FormAjax_Sync(formData, params.uploadUrl, function (result, status) {
       let code = 0;
       let percent = 0;
-      if (result.code === 0) {
-        console.log("分片共" + chunkCount + "个" + ",已成功上传第" + index + "个")
+      if (status === 200) {
+        // console.log("分片共" + chunkCount + "个" + ",已成功上传第" + index + "个")
         percent = parseInt((parseInt(formData.get("chunkIndex")) + 1) * 100 / chunkCount);
       } else {
         params.fileSize = -1;
         code = -1
-        console.log("分片第" + index + "个上传失败")
+        // console.log("分片第" + index + "个上传失败")
       }
       self.postMessage({code: code, percent: percent});
     })
     start = end;
     index++;
   }
-  console.log("上传分片总时间：" + (new Date().getTime() - startTime));
-  console.log("分片完成");
+  // console.log("上传分片总时间：" + (new Date().getTime() - startTime));
+  // console.log("分片完成");
 }

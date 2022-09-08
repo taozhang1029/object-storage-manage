@@ -47,6 +47,7 @@ async function uploadFile(file, {originName, bucketName, key}) {
       // 如果文件大于等于5MB，分片上传
       await uploadByPieces('/api/uploadMultiChunk', {file: file, originName, bucketName, key});
       loadingInstance.close();
+      return Promise.resolve(true)
     }
   } catch (e) {
     loadingInstance.close();
@@ -61,7 +62,7 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
   }
   pageData.chunkCount = Math.ceil(fileSize / pageData.chunkSize);
   const fileMD5 = MD5.hex_md5(originName + bucketName + key + new Date().getTime())
-  console.log("计算文件MD：" + fileMD5);
+  // console.log("计算文件MD：" + fileMD5);
   pageData.showProgress = true;
   let worker = new Worker('worker.js');
   let param = {

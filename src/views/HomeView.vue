@@ -224,6 +224,7 @@ export default {
           originName: this.files.name,
           key: MD5.hex_md5(this.targetBucket.bucketName + this.files.name + new Date().getTime()).substring(0, 8),
         }).then(resp => {
+          console.log(resp)
           if (resp) {
             this.$message.success("上传成功")
             this.search(this.pageNum)
