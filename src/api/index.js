@@ -133,3 +133,16 @@ export function pullOuterFile(bucketName, key, originName, outerUrl) {
     outerUrl
   })
 }
+
+/**
+ * 批量删除
+ * @param bucketName
+ * @param keys
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export function batchDelete(bucketName, keys) {
+  return http.delete('/batchDelete', {
+    bucketName,
+    keys
+  })
+}

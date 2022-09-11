@@ -29,6 +29,12 @@
         <el-button type="primary" @click="search(1)">搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button @click="$router.push({name: 'home'})">返回</el-button>
+        <el-button @click="batchSelect = !batchSelect" class="el-icon-menu">
+          {{ batchSelect ? '取消' : '批量管理' }}
+        </el-button>
+        <el-button @click="deleteVisible = true" class="el-icon-delete-solid" style="color: red" v-show="batchSelect && selections.length">
+          批量删除
+        </el-button>
       </el-form-item>
 
       <el-form-item class="right">
@@ -41,9 +47,17 @@
     <el-table
         stripe
         size="small"
+        @selection-change="handleSelectionChange"
         :header-cell-style="{backgroundColor: '#ece8e8', color: 'black'}"
         :data="objects"
         class="buckets">
+
+      <el-table-column
+          v-if="batchSelect"
+          type="selection"
+          width="55">
+      </el-table-column>
+
       <!-- 自定义索引名称 -->
       <el-table-column label="序号" type="index" width="60"></el-table-column>
 
@@ -79,14 +93,23 @@
     <!-- 分页组件 -->
     <Page :total="total" :page-size.sync="pageSize"
           @pageNumChangeHandler="pageNumChange"
-          @pageSizeChangeHandler="pageSizeChange"></Page>
+          @pageSizeChangeHandler="pageSizeChange">
+    </Page>
+
+    <el-dialog title="删除文件" :visible.sync="deleteVisible" width="30%">
+      您确定要删除所选文件吗？
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmBatchDelete">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
 import Page from "@/components/Page";
-import {deleteObject, download, queryObjects} from "@/api";
+import {batchDelete, deleteObject, download, queryObjects} from "@/api";
 import Uploader from "@/components/Uploader";
 
 export default {
@@ -95,6 +118,9 @@ export default {
   props: ['bucketName',],
   data() {
     return {
+      deleteVisible: false,
+      batchSelect: false,
+      selections: [],
       currObj: null,
       visible: false,
       objects: [],
@@ -112,12 +138,27 @@ export default {
     this.search(1)
   },
   methods: {
+    handleSelectionChange(val) {
+      this.selections = val
+    },
     reset() {
       this.form.name = ''
       this.form.dates = []
     },
     downloadFile(object) {
       download(this.bucketName, object.key)
+    },
+    confirmBatchDelete() {
+      const keys = this.selections.map(item => item.key)
+      batchDelete(this.bucketName, keys).then(success => {
+        if (success) {
+          this.deleteVisible = false
+          this.$message.success('批量删除成功')
+          this.search(1)
+        } else {
+          this.$message.success('批量删除失败，请稍后再试！')
+        }
+      })
     },
     deleteFile() {
       if (!this.currObj) {
