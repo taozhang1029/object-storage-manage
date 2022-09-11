@@ -61,7 +61,7 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
     chunkSize: CHUNK_SIZE,
   }
   pageData.chunkCount = Math.ceil(fileSize / pageData.chunkSize);
-  const fileMD5 = MD5.hex_md5(originName + bucketName + key + new Date().getTime())
+  const fileMD5 = MD5.hex_md5(file.type + originName + fileSize)
   // console.log("计算文件MD：" + fileMD5);
   pageData.showProgress = true;
   let worker = new Worker('worker.js');
@@ -76,7 +76,7 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
     file
   }
 
-  worker.onmessage = event => {
+  worker.onmessage = function (event) {
     let workResult = event.data;
     if (workResult.code === 0) {
       pageData.percent = workResult.percent;

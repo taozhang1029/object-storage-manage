@@ -13,8 +13,8 @@ module.exports = {
     proxy: {
       '/api': {
         withCredentials: true,
-        // target: 'http://storage.kingsley.com/',
-        target: 'http://127.0.0.1:9527/',
+        target: 'http://storage.kingsley.com/',
+        // target: 'http://127.0.0.1:9527/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

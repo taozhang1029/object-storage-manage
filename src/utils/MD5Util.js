@@ -140,7 +140,9 @@ function md5_ii(a, b, c, d, x, s, t) {
  */
 function core_hmac_md5(key, data) {
   let bkey = str2binl(key);
-  if (bkey.length > 16) bkey = core_md5(bkey, key.length * chrsz);
+  if (bkey.length > 16) {
+    bkey = core_md5(bkey, key.length * chrsz)
+  }
 
   let ipad = Array(16), opad = Array(16);
   for (let i = 0; i < 16; i++) {

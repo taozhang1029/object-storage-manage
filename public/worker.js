@@ -35,7 +35,7 @@ self.onmessage = (evt) => {
     let formData = new FormData();
     formData.append("bucketName", params.bucketName);
     formData.append("key", params.key);
-    formData.append("originalFilename", params.originName);
+    formData.append("originName", params.originName);
     formData.append("fileTotalSize", params.fileSize);
     formData.append("file", chunk, params.originName);
     formData.append("fileMD5", params.fileMD5);
@@ -43,7 +43,7 @@ self.onmessage = (evt) => {
     formData.append("chunkIndex", index + '');
     formData.append("chunkSize", (end - start) + '');
     //上传文件
-    FormAjax_Sync(formData, params.uploadUrl, (result, status) => {
+    FormAjax_Sync(formData, params.uploadUrl, function (result, status) {
       let code = 0;
       let percent = 0;
       if (status === 200) {
@@ -61,4 +61,5 @@ self.onmessage = (evt) => {
   }
   // console.log("上传分片总时间：" + (new Date().getTime() - startTime));
   // console.log("分片完成");
+  // close()
 }
