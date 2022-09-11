@@ -16,8 +16,6 @@ const REQUEST_TYPE = {
   DUPLICATED_REQUEST: 'duplicatedRequest'
 }
 
-const SUCCESS_CODE = 200
-
 const duplicatedKeyFn = (config) => {
   let {
     method,
@@ -63,7 +61,8 @@ const removePendingXHR = (config) => {
 }
 
 const request = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? "http://storage.kingsley.com/" : "/api",
+  // baseURL: process.env.NODE_ENV === 'production' ? "http://storage.kingsley.com/" : "/api",
+  baseURL: process.env.NODE_ENV === 'production' ? "/" : "/api",
   withCredentials: true,
   // timeout: 5000
 })

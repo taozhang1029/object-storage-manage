@@ -20,7 +20,7 @@ export default {
     }
   },
   created() {
-    this.resourceUrl = '/api/' + this.$route.params.bucketName + '/' + this.$route.params.objectKey
+    this.resourceUrl = '/api/getObj/' + this.$route.params.bucketName + '/' + this.$route.params.objectKey
   },
   mounted() {
     let timer = setTimeout(() => {

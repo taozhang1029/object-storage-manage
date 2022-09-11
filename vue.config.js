@@ -1,6 +1,6 @@
 module.exports = {
-  // publicPath: "/static/",
-  publicPath: "./",
+  publicPath: "/view/",
+  // publicPath: "./",
   devServer: {
     headers: {
       "Access-Control-Allow-Origin": "*"

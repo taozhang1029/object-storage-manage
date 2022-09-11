@@ -9,7 +9,7 @@ import {http} from "@/utils/http";
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function queryBuckets(bucketName, dateRange, pageNum, pageSize) {
-  return http.get('/', {
+  return http.get('/buckets', {
     bucketName,
     startTime: (dateRange && dateRange.length > 0) ? dateRange[0] : null,
     endTime: (dateRange && dateRange.length > 1) ? dateRange[1] : null,
@@ -68,7 +68,7 @@ export function download(bucketName, key) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function existsBucket(bucketName) {
-  return http.get('/exists', {
+  return http.get('/bucketExists', {
     bucketName
   })
 }
@@ -80,7 +80,7 @@ export function existsBucket(bucketName) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function createBucket(bucketName, location) {
-  return http.put('/' + bucketName + "?location=" + location)
+  return http.put('/createBucket/' + bucketName + "?location=" + location)
 }
 
 /**
@@ -89,7 +89,7 @@ export function createBucket(bucketName, location) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function deleteBucket(bucketName) {
-  return http.delete('/', {
+  return http.delete('/delete', {
     bucketName,
     isDeleteObj: false
   })
@@ -102,7 +102,7 @@ export function deleteBucket(bucketName) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function deleteObject(bucketName, key) {
-  return http.delete('/', {
+  return http.delete('/delete', {
     bucketName,
     key,
     isDeleteObj: true
@@ -117,7 +117,7 @@ export function deleteObject(bucketName, key) {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export function uploadFile(bucketName, key, originName) {
-  return http.put('/' + bucketName + '/' + key + "?originName=" + originName)
+  return http.put('/uploadFile/' + bucketName + '/' + key + "?originName=" + originName)
 }
 
 /**
