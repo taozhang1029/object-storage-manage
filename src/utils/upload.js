@@ -2,7 +2,6 @@ import axios from "axios";
 import MD5 from "@/utils/MD5Util";
 import {Loading} from "element-ui";
 import Vue from "vue";
-import fa from "element-ui/src/locale/lang/fa";
 
 /**
  * 每个分片的大小
@@ -44,7 +43,11 @@ async function uploadFile(file, {originName, bucketName, key}) {
       formData.append("key", key);
       const res = await upload('/api/uploadSingleChunk', formData);
       loadingInstance.close();
-      Vue.prototype.$bus.$emit('uploadFinish', res)
+      Vue.prototype.$bus.$emit('uploadProcess', {
+        success: true,
+        finished: true,
+        percent: 100
+      })
     } else {
       // 如果文件大于等于5MB，分片上传
       await uploadByPieces('/api/uploadMultiChunk', {file: file, originName, bucketName, key});
