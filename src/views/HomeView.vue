@@ -47,6 +47,10 @@
         <el-button type="primary" @click="search(1)">搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button type="success" @click="createVisible=true">新建</el-button>
+        <span style="margin-left: 20px;font-size: 12px" v-show="uploading">
+          上传进度：
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="uploadPercent" status="success" style="display: inline-block;width: 200px"></el-progress>
+        </span>
       </el-form-item>
     </el-form>
 
@@ -74,7 +78,6 @@
             <el-upload
                 :ref="'uploader'+row.bucketName"
                 with-credentials
-                multiple
                 class="avatar-uploader"
                 action="#"
                 :auto-upload="true"
@@ -90,9 +93,7 @@
     </el-table>
 
     <!-- 分页组件 -->
-    <Page :total="total" :page-size.sync="pageSize"
-          @pageNumChangeHandler="pageNumChange"
-          @pageSizeChangeHandler="pageSizeChange"></Page>
+    <Page :total="total" :page-size.sync="pageSize" @pageNumChangeHandler="pageNumChange" @pageSizeChangeHandler="pageSizeChange"></Page>
 
   </div>
 </template>
@@ -130,8 +131,10 @@ export default {
       })
     };
     return {
+      uploading: false,
+      uploadPercent: 0,
       targetBucket: null,
-      files: null,
+      file: null,
       currBucket: null,
       createVisible: false,
       deleteVisible: false,
@@ -165,19 +168,27 @@ export default {
     this.search(1)
   },
   mounted() {
-    this.$bus.$on(['uploadFinish'], success => {
-      if (success) {
-        this.$message.success('上传成功')
-        this.search(this.pageNum)
-      } else {
+    this.$bus.$on(['uploadProcess'], pageData => {
+      if (!pageData.success) {
         this.$message.error('上传失败')
+        this.$refs['uploader' + this.targetBucket.bucketName].clearFiles()
+        this.file = null
+        return
       }
-      this.$refs['uploader' + this.targetBucket.bucketName].clearFiles()
-      this.files = null
+      this.uploadPercent = pageData.percent
+      if (pageData.finished) {
+        this.$message.success('上传成功')
+        this.$refs['uploader' + this.targetBucket.bucketName].clearFiles()
+        this.file = null
+        this.search(this.pageNum)
+        setTimeout(() => {
+          this.uploading = false
+        }, 1000)
+      }
     })
   },
   beforeDestroy() {
-    this.$bus.$off(['uploadFinish'])
+    this.$bus.$off(['uploadProcess'])
   },
   methods: {
     reset() {
@@ -229,15 +240,16 @@ export default {
         }
       });
     },
-    beforeUpload(files) {
-      this.files = files
+    beforeUpload(file) {
+      this.file = file
     },
     requestUploadFile(e) {
-      if (this.files != null) {
-        uploadFile(this.files, {
+      if (this.file != null) {
+        this.uploading = true
+        uploadFile(this.file, {
           bucketName: this.targetBucket.bucketName,
-          originName: this.files.name,
-          key: MD5.hex_md5(this.targetBucket.bucketName + this.files.name + new Date().getTime()).substring(0, 8)
+          originName: this.file.name,
+          key: MD5.hex_md5(this.targetBucket.bucketName + this.file.name + new Date().getTime()).substring(0, 8)
         })
       } else {
         this.$message.warning("请先选择要上传的文件");

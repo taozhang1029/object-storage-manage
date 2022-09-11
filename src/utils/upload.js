@@ -2,6 +2,7 @@ import axios from "axios";
 import MD5 from "@/utils/MD5Util";
 import {Loading} from "element-ui";
 import Vue from "vue";
+import fa from "element-ui/src/locale/lang/fa";
 
 /**
  * 每个分片的大小
@@ -63,7 +64,6 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
   pageData.chunkCount = Math.ceil(fileSize / pageData.chunkSize);
   const fileMD5 = MD5.hex_md5(file.type + originName + fileSize)
   // console.log("计算文件MD：" + fileMD5);
-  pageData.showProgress = true;
   let worker = new Worker('worker.js');
   let param = {
     uploadUrl,
@@ -78,19 +78,20 @@ function uploadByPieces(uploadUrl, {file, originName, bucketName, key}) {
 
   worker.onmessage = function (event) {
     let workResult = event.data;
-    if (workResult.code === 0) {
+    pageData.success = workResult.code === 200;
+    pageData.chunkCount = workResult.chunkCount
+    pageData.index = workResult.index
+    if (workResult.code === 200) {
       pageData.percent = workResult.percent;
       if (workResult.percent === 100) {
-        pageData.showProgress = false;
+        pageData.finished = true;
         worker.terminate();
       }
-      if (workResult.chunkCount === workResult.index + 1) {
-        Vue.prototype.$bus.$emit('uploadFinish', true)
-      }
+      Vue.prototype.$bus.$emit('uploadProcess', pageData)
     } else {
-      pageData.showProgress = false;
+      pageData.success = false
       worker.terminate();
-      Vue.prototype.$bus.$emit('uploadFinish', false)
+      Vue.prototype.$bus.$emit('uploadProcess', pageData)
     }
   }
   worker.postMessage(param);

@@ -44,7 +44,7 @@ self.onmessage = (evt) => {
     formData.append("chunkSize", (end - start) + '');
     //上传文件
     FormAjax_Sync(formData, params.uploadUrl, function (result, status) {
-      let code = 0;
+      let code = 200;
       let percent = 0;
       if (status === 200) {
         // console.log("分片共" + chunkCount + "个" + ",已成功上传第" + index + "个")

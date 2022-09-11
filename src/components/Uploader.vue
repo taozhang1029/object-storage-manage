@@ -10,6 +10,10 @@
       :http-request="requestUploadFile"
       :before-upload="beforeUpload">
     <div slot="trigger">
+      <span style="margin: 0 20px;font-size: 12px" v-show="uploading">
+        上传进度：
+        <el-progress :text-inside="true" :stroke-width="18" :percentage="uploadPercent" status="success" style="display: inline-block;width: 200px"></el-progress>
+      </span>
       <slot></slot>
     </div>
   </el-upload>
@@ -24,23 +28,33 @@ export default {
   props: ['bucketName'],
   data() {
     return {
-      file: null
+      file: null,
+      uploading: false,
+      uploadPercent: 0,
     }
   },
   mounted() {
-    this.$bus.$on(['uploadFinish'], (success) => {
-      if (success) {
+    this.$bus.$on(['uploadProcess'], pageData => {
+      if (!pageData.success) {
+        this.$message.error('上传失败')
+        this.$refs.uploader.clearFiles()
+        this.file = null
+        return
+      }
+      this.uploadPercent = pageData.percent
+      if (pageData.finished) {
         this.$message.success('上传成功')
         this.$emit('successUploadFinish')
-      } else {
-        this.$message.error('上传失败')
+        this.$refs.uploader.clearFiles()
+        this.file = null
+        setTimeout(() => {
+          this.uploading = false
+        }, 1000)
       }
-      this.$refs.uploader.clearFiles()
-      this.file = null
     })
   },
   beforeDestroy() {
-    this.$bus.$off(['uploadFinish'])
+    this.$bus.$off(['uploadProcess'])
   },
   methods: {
     beforeUpload(file) {
@@ -48,6 +62,7 @@ export default {
     },
     requestUploadFile(e) {
       if (this.file != null) {
+        this.uploading = true
         uploadFile(this.file, {
           bucketName: this.bucketName,
           originName: this.file.name,
@@ -65,6 +80,7 @@ export default {
 .avatar-uploader {
   display: inline-block;
 }
+
 /deep/ .el-upload-list {
   display: none;
 }
