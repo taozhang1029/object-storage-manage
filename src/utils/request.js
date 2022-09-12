@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Vue from "vue";
 import fileDownload from "js-file-download";
+import {PRE_URL} from "@/utils/constants";
 
 // 允许携带cookie
 axios.defaults.withCredentials = true
@@ -62,7 +63,7 @@ const removePendingXHR = (config) => {
 
 const request = axios.create({
   // baseURL: process.env.NODE_ENV === 'production' ? "http://storage.kingsley.com/" : "/api",
-  baseURL: process.env.NODE_ENV === 'production' ? "/" : "/api",
+  baseURL: PRE_URL,
   withCredentials: true,
   // timeout: 5000
 })
